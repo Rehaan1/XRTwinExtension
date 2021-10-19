@@ -60,8 +60,9 @@ namespace XRTwin.Weather
                 clouds.SetActive(true);
             }
 
-            if (weatherC.Equals("Haze"))
+            if (weatherC.Equals("Haze") || weatherC.Equals("Mist"))
             {
+                sun.SetActive(true);
                 haze.SetActive(true);
             }
 
@@ -73,6 +74,11 @@ namespace XRTwin.Weather
             if (weatherC.Equals("Snow"))
             {
                 snow.SetActive(true);
+            }
+
+            if (weatherC.Equals("Sunny"))
+            {
+                sun.SetActive(true);
             }
         }
     }
