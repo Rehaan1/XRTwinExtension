@@ -14,10 +14,10 @@ namespace XRTwin.DataManager
 
         void Start()
         {
-            InitializePlugin(pluginName);
+            InitializePlugin("com.xrdsc.xrtwin.PluginInstance");
         }
 
-        
+
         void Update()
         {
 
@@ -28,7 +28,7 @@ namespace XRTwin.DataManager
             unityClass = new AndroidJavaClass("com.unity3d.player.UnityPlayer");
             unityActivity = unityClass.GetStatic<AndroidJavaObject>("currentActivity");
             _pluginInstance = new AndroidJavaObject(pluginName);
-            if(_pluginInstance != null)
+            if(_pluginInstance == null)
             {
                 Debug.Log("Plugin Instance Error");
             }
@@ -37,6 +37,7 @@ namespace XRTwin.DataManager
 
         public void Add()
         {
+            Debug.Log("Entered Add");
             if (_pluginInstance != null)
             {
                 var result = _pluginInstance.Call<int>("Add", 5, 6);
@@ -46,6 +47,7 @@ namespace XRTwin.DataManager
 
         public void Toast()
         {
+            Debug.Log("Entered Toast");
             if(_pluginInstance != null)
             {
                 _pluginInstance.Call("Toast", "Hi! From Unity");
