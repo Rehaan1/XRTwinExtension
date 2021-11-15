@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "334539703562",
+    "project_id": "xrtwin-cccb9",
+    "storage_bucket": "xrtwin-cccb9.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:334539703562:android:1ff23c8347eddba803a6f3",
+        "android_client_info": {
+          "package_name": "com.unity3d.player"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "334539703562-csqfmbh2ta4qbcs0b5th1tr8qgted7bd.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.unity3d.player",
+            "certificate_hash": "916c530318e6155c869ff27ed79ab1fbe8423f31"
+          }
+        },
+        {
+          "client_id": "334539703562-atjp417kbu7htao7upa1cg2682j2230j.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBE60hTYWSLBbMmjwPIPdmS9sTh8Mi26ls"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "334539703562-atjp417kbu7htao7upa1cg2682j2230j.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

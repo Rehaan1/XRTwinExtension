@@ -4,6 +4,9 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.xrdsc.XRTwin"
     xmlns:tools="http://schemas.android.com/tools">
+
+	<uses-permission android:name="android.permission.INTERNET" />
+	
     <application>
         <activity android:name="com.xrdsc.xrtwinactivity.PluginActivity"
                   android:theme="@style/UnityThemeSelector">

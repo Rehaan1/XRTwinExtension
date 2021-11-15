@@ -18,22 +18,25 @@ public class PluginActivity : MonoBehaviour
         
     }
 
-    public void Add()
+
+    public void GoogleOAuth()
     {
-        if(_pluginActivity != null)
+        if (_pluginActivity != null)
         {
-            var result = _pluginActivity.Call<int>("Add", 7, 8);
-            Debug.Log("result: " + result);
+            _pluginActivity.Call("signIn");
+            Debug.Log("Called Sign In");
         }
     }
 
-    public void ShowToast()
+    public void SignOut()
     {
-        if(_pluginActivity != null)
+        if (_pluginActivity != null)
         {
-            _pluginActivity.Call("ShowToast", "Called From Unity!");
+            _pluginActivity.Call("signOut");
+            Debug.Log("Called Sign Out");
         }
     }
+
 
     public void GetInput(InputField inputField)
     {
@@ -49,5 +52,10 @@ public class PluginActivity : MonoBehaviour
     public void ResultTrue(string result)
     {
         Debug.Log("Called from Unity Plugin: " + result);
+    }
+
+    public void IDToken(string result)
+    {
+        Debug.Log("ID Token GOT >>>>>>>>>>>> : " + result);
     }
 }
