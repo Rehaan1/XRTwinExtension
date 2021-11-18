@@ -11,11 +11,13 @@ public class PluginActivity : MonoBehaviour
     [SerializeField] int loginScene = 0;
     AndroidJavaObject _pluginActivity;
     string idToken;
+    string _accessToken;
 
     void Awake()
     {
         DontDestroyOnLoad(this.gameObject);
         idToken = PlayerPrefs.GetString("idToken", "Null");
+        _accessToken = PlayerPrefs.GetString("accessToken", "Null");
         if(!String.Equals(idToken, "Null"))
         {
             SceneManager.LoadScene(mainScene);
@@ -52,6 +54,7 @@ public class PluginActivity : MonoBehaviour
         }
 
         PlayerPrefs.SetString("idToken", "Null");
+        PlayerPrefs.SetString("accessToken", "Null");
         SceneManager.LoadScene(loginScene);
     }
 
@@ -76,6 +79,13 @@ public class PluginActivity : MonoBehaviour
     {
         Debug.Log("ID Token GOT >>>>>>>>>>>> : " + result);
         PlayerPrefs.SetString("idToken", result);
+        SceneManager.LoadScene(mainScene);
+    }
+
+    public void accessToken(string result)
+    {
+        Debug.Log("Access Token GOT ************* : " + result);
+        PlayerPrefs.SetString("accessToken", result);
         SceneManager.LoadScene(mainScene);
     }
 }
