@@ -13,12 +13,16 @@ namespace XRTwin.DataManager
         readonly string getTasksUrl = "https://xrtwindata.herokuapp.com/googleTask/tasks";
         readonly string createTaskUrl = "https://xrtwindata.herokuapp.com/googleTask/createTask";
         readonly string deleteTaskUrl = "https://xrtwindata.herokuapp.com/googleTask/deleteTask";
+        
         string accessToken;
+        Dictionary<string, string> tasks;
 
         void Start()
         {
             //@TODO Replace with PlayerPrefs
             accessToken = "ya29.a0ARrdaM9rCqj-WrMUsSVkqCQYe-QOTBfhcHrwLjY5kWq5mUWihRTd4voxjNxuiO5yhbIqn4E5-sAg6SAPIxZn_u6oz4zl4ygXjATUkhij2yx9I4ROs24ioaZUamWBKbNAZ4Zf-Vg30xaModlE0Eoh_CRZl4v-8A";
+
+            tasks = new Dictionary<string, string>();
 
             StartCoroutine(GetTaskLists());
         }
@@ -76,6 +80,38 @@ namespace XRTwin.DataManager
             JSONNode tasksInfo = JSON.Parse(tasksRequest.downloadHandler.text);
 
             Debug.Log(tasksInfo["data"]);
+            Debug.Log(tasksInfo["data"]["items"].Count);
+            
+            int tasksCount = tasksInfo["data"]["items"].Count;
+            
+            if (tasksCount > 8)
+            {
+                for(int i=0; i<8; i++)
+                {
+                    string id = tasksInfo["data"]["items"][i]["id"];
+                    id = id.ToString();
+
+                    string title = tasksInfo["data"]["items"][i]["title"];
+                    title = title.ToString();
+
+                    tasks.Add(id, title);
+                }
+            }
+            else
+            {
+                for (int i=0; i<tasksCount; i++)
+                {
+                    string id = tasksInfo["data"]["items"][i]["id"];
+                    id = id.ToString();
+
+                    string title = tasksInfo["data"]["items"][i]["title"];
+                    title = title.ToString();
+
+                    tasks.Add(id, title);
+                }
+            }
+
+           
         }
     }
 }
