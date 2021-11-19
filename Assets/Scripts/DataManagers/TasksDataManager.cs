@@ -21,7 +21,7 @@ namespace XRTwin.DataManager
         void Start()
         {
             //@TODO Replace with PlayerPrefs
-            accessToken = "ya29.a0ARrdaM9rCqj-WrMUsSVkqCQYe-QOTBfhcHrwLjY5kWq5mUWihRTd4voxjNxuiO5yhbIqn4E5-sAg6SAPIxZn_u6oz4zl4ygXjATUkhij2yx9I4ROs24ioaZUamWBKbNAZ4Zf-Vg30xaModlE0Eoh_CRZl4v-8A";
+            accessToken = "ya29.a0ARrdaM86oj3yXsv0JLrDvyjO_7t4WC7tk084AYOkv4iux3JA91CUmR-ZTME9eoAYOnc7P9rEqkRHWIDPCvezRZNHRPQMJDdgbn6RK1hlkJhcg4rBVG5SNtAh5wZHvAQkcKSb4lsFhjBEx9OL_D-CVwXaakY2HQ";
 
             tasks = new Dictionary<string, string>();
 
@@ -55,7 +55,6 @@ namespace XRTwin.DataManager
             
             taskListID = taskListInfo["data"]["items"][0]["id"];
             StartCoroutine(GetTasks(taskListID));
-  
         }
 
         IEnumerator GetTasks(string taskListId)
@@ -90,7 +89,9 @@ namespace XRTwin.DataManager
             
             if (tasksCount > 8)
             {
-                for(int i=0; i<8; i++)
+                tasks.Clear();
+
+                for (int i=0; i<8; i++)
                 {
                     string id = tasksInfo["data"]["items"][i]["id"];
                     id = id.ToString();
@@ -103,6 +104,8 @@ namespace XRTwin.DataManager
             }
             else
             {
+                tasks.Clear();
+
                 for (int i=0; i<tasksCount; i++)
                 {
                     string id = tasksInfo["data"]["items"][i]["id"];
@@ -149,6 +152,40 @@ namespace XRTwin.DataManager
             Debug.Log("Task Create Status");
             Debug.Log(createTasksInfo["data"]);
             
+            // Updates the Task Dictionary
+            StartCoroutine(GetTasks(taskListID));
+        }
+
+        public void RemoveTask(string id)
+        {
+            StartCoroutine(TaskRemove(id));
+        }
+
+        IEnumerator TaskRemove(string id)
+        {
+            string idTasksList = taskListID.ToString();
+
+            WWWForm removeTask = new WWWForm();
+
+            removeTask.AddField("accessToken", accessToken);
+            removeTask.AddField("tasklistIdentifier", idTasksList);
+            removeTask.AddField("taskId", id);
+
+            UnityWebRequest removeTasksRequest = UnityWebRequest.Post(deleteTaskUrl, removeTask);
+            removeTasksRequest.SetRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+
+            yield return removeTasksRequest.SendWebRequest();
+
+            if (removeTasksRequest.isNetworkError || removeTasksRequest.isHttpError)
+            {
+                Debug.LogError(removeTasksRequest.error);
+                yield break;
+            }
+
+            JSONNode createTasksInfo = JSON.Parse(removeTasksRequest.downloadHandler.text);
+            Debug.Log("Task Create Status");
+            Debug.Log(createTasksInfo["data"]);
+
             // Updates the Task Dictionary
             StartCoroutine(GetTasks(taskListID));
         }
