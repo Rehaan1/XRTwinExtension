@@ -15,6 +15,7 @@ namespace XRTwin.DataManager
         readonly string deleteTaskUrl = "https://xrtwindata.herokuapp.com/googleTask/deleteTask";
         
         string accessToken;
+        string taskListID;
         Dictionary<string, string> tasks;
 
         void Start()
@@ -52,12 +53,15 @@ namespace XRTwin.DataManager
 
             JSONNode taskListInfo = JSON.Parse(taskListRequest.downloadHandler.text);
             
-            string taskListID = taskListInfo["data"]["items"][0]["id"];
+            taskListID = taskListInfo["data"]["items"][0]["id"];
             StartCoroutine(GetTasks(taskListID));
+  
         }
 
         IEnumerator GetTasks(string taskListId)
         {
+            tasks.Clear();
+
             string idTasksList = taskListId.ToString();
             Debug.Log(idTasksList);
 
@@ -112,6 +116,41 @@ namespace XRTwin.DataManager
             }
 
            
+        }
+
+
+        public void CreateTask(string title)
+        {
+            StartCoroutine(TaskCreate(title));
+        }
+
+        IEnumerator TaskCreate(string title)
+        {
+            string idTasksList = taskListID.ToString();
+
+            WWWForm createTask = new WWWForm();
+
+            createTask.AddField("accessToken", accessToken);
+            createTask.AddField("tasklistIdentifier", idTasksList);
+            createTask.AddField("title", title);
+
+            UnityWebRequest createTasksRequest = UnityWebRequest.Post(createTaskUrl, createTask);
+            createTasksRequest.SetRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+
+            yield return createTasksRequest.SendWebRequest();
+
+            if (createTasksRequest.isNetworkError || createTasksRequest.isHttpError)
+            {
+                Debug.LogError(createTasksRequest.error);
+                yield break;
+            }
+
+            JSONNode createTasksInfo = JSON.Parse(createTasksRequest.downloadHandler.text);
+            Debug.Log("Task Create Status");
+            Debug.Log(createTasksInfo["data"]);
+            
+            // Updates the Task Dictionary
+            StartCoroutine(GetTasks(taskListID));
         }
     }
 }
