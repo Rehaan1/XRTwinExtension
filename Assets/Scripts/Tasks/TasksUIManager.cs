@@ -18,10 +18,14 @@ namespace XRTwin.Tasks
         [SerializeField] Button button;
         [SerializeField] GameObject addTaskCanvas;
 
+        List<GameObject> tasksInstances;
+
         void Start()
         {
             tasksDataManager.onTasksLoaded.AddListener(SpawnTasks);
             button.onClick.AddListener(AddTask);
+
+            tasksInstances = new List<GameObject>();
         }
 
         
@@ -32,6 +36,14 @@ namespace XRTwin.Tasks
 
         public void SpawnTasks()
         {   
+
+            foreach(GameObject taskInstance in tasksInstances)
+            {
+                Destroy(taskInstance);
+            }
+
+            tasksInstances.Clear();
+
             foreach(KeyValuePair<string,string> kvp in tasksDataManager.tasks)
             {
                 Debug.Log(kvp.Value);
@@ -41,6 +53,8 @@ namespace XRTwin.Tasks
                 taskHolder.gameObject.GetComponentInChildren<Interactable>().OnClick.AddListener(delegate { RemoveTask(kvp.Key); });
                 
                 taskHolder.SetActive(true);
+
+                tasksInstances.Add(taskHolder);
             }
         }
 
