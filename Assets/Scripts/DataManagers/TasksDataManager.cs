@@ -14,22 +14,28 @@ namespace XRTwin.DataManager
         readonly string getTasksUrl = "https://xrtwindata.herokuapp.com/googleTask/tasks";
         readonly string createTaskUrl = "https://xrtwindata.herokuapp.com/googleTask/createTask";
         readonly string deleteTaskUrl = "https://xrtwindata.herokuapp.com/googleTask/deleteTask";
+        readonly string userInfoUrl = "https://xrtwindata.herokuapp.com/googleTask/userInfo";
 
         public Dictionary<string, string> tasks;
         public UnityEvent onTasksLoaded;
+        public UnityEvent onNameGot;
+        public string userName;
 
         string accessToken;
+        string idToken;
         string taskListID;
         
 
         void Start()
         {
             //@TODO Replace with PlayerPrefs
-            accessToken = "ya29.a0ARrdaM9Sr9q96-8TlIJy46KSxbWMZbQ3gh2yTro1I6C2xARqgR6jHW4kfBEX5BUwAZCJEV9elo3tscMihq9e77GVxXND45eaqmK6G_6FAG3bhNVDCSATmSfsbMHohKM3_YKqvcCLm4e0_QKcth1CBlOTRCnhbA";
+            accessToken = PlayerPrefs.GetString("accessToken", "Null"); 
+            idToken = PlayerPrefs.GetString("idToken", "Null");
 
             tasks = new Dictionary<string, string>();
 
             StartCoroutine(GetTaskLists());
+            StartCoroutine(GetUserInfo());
         }
 
         
@@ -125,6 +131,29 @@ namespace XRTwin.DataManager
             }
 
             onTasksLoaded.Invoke();
+        }
+
+        IEnumerator GetUserInfo()
+        {
+            WWWForm userInfoForm = new WWWForm();
+
+            userInfoForm.AddField("idToken", idToken);
+
+            UnityWebRequest userInfoRequest = UnityWebRequest.Post(userInfoUrl, userInfoForm);
+            userInfoRequest.SetRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+
+            yield return userInfoRequest.SendWebRequest();
+
+            if (userInfoRequest.isNetworkError || userInfoRequest.isHttpError)
+            {
+                Debug.LogError(userInfoRequest.error);
+                yield break;
+            }
+
+            JSONNode userInfo = JSON.Parse(userInfoRequest.downloadHandler.text);
+           
+            userName = userInfo["userData"]["given_name"];
+            onNameGot.Invoke();
         }
 
 

@@ -17,12 +17,14 @@ namespace XRTwin.Tasks
         [SerializeField] MRTKTMPInputField inputField;
         [SerializeField] Button button;
         [SerializeField] GameObject addTaskCanvas;
+        [SerializeField] TextMeshPro name;
 
         List<GameObject> tasksInstances;
 
         void Start()
         {
             tasksDataManager.onTasksLoaded.AddListener(SpawnTasks);
+            tasksDataManager.onNameGot.AddListener(SetName);
             button.onClick.AddListener(AddTask);
 
             tasksInstances = new List<GameObject>();
@@ -68,6 +70,11 @@ namespace XRTwin.Tasks
             addTaskCanvas.SetActive(false);
             string text = inputField.text;
             tasksDataManager.CreateTask(text);
+        }
+
+        void SetName()
+        {
+            name.text = tasksDataManager.userName;
         }
 
     }
