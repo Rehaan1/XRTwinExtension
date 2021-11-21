@@ -3,6 +3,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.Networking;
 
 namespace XRTwin.DataManager
@@ -13,15 +14,18 @@ namespace XRTwin.DataManager
         readonly string getTasksUrl = "https://xrtwindata.herokuapp.com/googleTask/tasks";
         readonly string createTaskUrl = "https://xrtwindata.herokuapp.com/googleTask/createTask";
         readonly string deleteTaskUrl = "https://xrtwindata.herokuapp.com/googleTask/deleteTask";
-        
+
+        public Dictionary<string, string> tasks;
+        public UnityEvent onTasksLoaded;
+
         string accessToken;
         string taskListID;
-        Dictionary<string, string> tasks;
+        
 
         void Start()
         {
             //@TODO Replace with PlayerPrefs
-            accessToken = "ya29.a0ARrdaM86oj3yXsv0JLrDvyjO_7t4WC7tk084AYOkv4iux3JA91CUmR-ZTME9eoAYOnc7P9rEqkRHWIDPCvezRZNHRPQMJDdgbn6RK1hlkJhcg4rBVG5SNtAh5wZHvAQkcKSb4lsFhjBEx9OL_D-CVwXaakY2HQ";
+            accessToken = "ya29.a0ARrdaM9Sr9q96-8TlIJy46KSxbWMZbQ3gh2yTro1I6C2xARqgR6jHW4kfBEX5BUwAZCJEV9elo3tscMihq9e77GVxXND45eaqmK6G_6FAG3bhNVDCSATmSfsbMHohKM3_YKqvcCLm4e0_QKcth1CBlOTRCnhbA";
 
             tasks = new Dictionary<string, string>();
 
@@ -54,7 +58,9 @@ namespace XRTwin.DataManager
             JSONNode taskListInfo = JSON.Parse(taskListRequest.downloadHandler.text);
             
             taskListID = taskListInfo["data"]["items"][0]["id"];
-            StartCoroutine(GetTasks(taskListID));
+            
+            if(taskListID != null || !String.Equals(taskListID, ""))
+                StartCoroutine(GetTasks(taskListID));
         }
 
         IEnumerator GetTasks(string taskListId)
@@ -118,7 +124,7 @@ namespace XRTwin.DataManager
                 }
             }
 
-           
+            onTasksLoaded.Invoke();
         }
 
 
