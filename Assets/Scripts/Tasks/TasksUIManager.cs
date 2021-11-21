@@ -1,8 +1,10 @@
+using Microsoft.MixedReality.Toolkit.Experimental.UI;
 using Microsoft.MixedReality.Toolkit.UI;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 using XRTwin.DataManager;
 
 namespace XRTwin.Tasks
@@ -12,16 +14,20 @@ namespace XRTwin.Tasks
         [SerializeField] TasksDataManager tasksDataManager;
         [SerializeField] TasksVariables tasksVariable;
         [SerializeField] Transform tasksParent;
+        [SerializeField] MRTKTMPInputField inputField;
+        [SerializeField] Button button;
+        [SerializeField] GameObject addTaskCanvas;
 
         void Start()
         {
             tasksDataManager.onTasksLoaded.AddListener(SpawnTasks);
+            button.onClick.AddListener(AddTask);
         }
 
         
         void Update()
         {
-
+         
         }
 
         public void SpawnTasks()
@@ -41,6 +47,13 @@ namespace XRTwin.Tasks
         public void RemoveTask(string id)
         {
             tasksDataManager.RemoveTask(id);
+        }
+
+        public void AddTask()
+        {
+            addTaskCanvas.SetActive(false);
+            string text = inputField.text;
+            tasksDataManager.CreateTask(text);
         }
 
     }
