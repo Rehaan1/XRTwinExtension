@@ -16,24 +16,30 @@ public class PluginActivity : MonoBehaviour
     void Awake()
     {
         DontDestroyOnLoad(this.gameObject);
-        idToken = PlayerPrefs.GetString("idToken", "Null");
-        _accessToken = PlayerPrefs.GetString("accessToken", "Null");
-        if(!String.Equals(idToken, "Null"))
-        {
-            SceneManager.LoadScene(mainScene);
-        }
     }
 
     void Start()
     {
         _pluginActivity = new AndroidJavaObject("com.xrdsc.xrtwinactivity.PluginActivity");
+        idToken = PlayerPrefs.GetString("idToken", "Null");
+        _accessToken = PlayerPrefs.GetString("accessToken", "Null");
+        if (!String.Equals(idToken, "Null"))
+        {
+            GetNewTokens();
+        }
     }
 
-    
+
     void Update()
     {
         
     }
+
+    public void GetNewTokens()
+    {
+        Debug.Log("Calling Get New Token");
+        _pluginActivity.Call("getNewTokens");
+    }    
 
 
     public void GoogleOAuth()
@@ -79,7 +85,6 @@ public class PluginActivity : MonoBehaviour
     {
         Debug.Log("ID Token GOT >>>>>>>>>>>> : " + result);
         PlayerPrefs.SetString("idToken", result);
-        SceneManager.LoadScene(mainScene);
     }
 
     public void accessToken(string result)

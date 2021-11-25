@@ -152,7 +152,10 @@ namespace XRTwin.DataManager
 
             JSONNode userInfo = JSON.Parse(userInfoRequest.downloadHandler.text);
            
-            userName = userInfo["userData"]["given_name"];
+            string name = userInfo["userData"]["name"];
+            string[] nameSplit = name.Split();
+            userName = nameSplit[0];
+
             onNameGot.Invoke();
         }
 
